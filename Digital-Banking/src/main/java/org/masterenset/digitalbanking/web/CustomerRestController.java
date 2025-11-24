@@ -59,7 +59,7 @@ public class CustomerRestController {
     public AccountHistoryDto getAccountHistory
             (@PathVariable(name = "id") String accoundId,
              @RequestParam(name = "page" , defaultValue = "0") int page,
-             @RequestParam(name = "page" , defaultValue = "5") int size) throws BankAccountNotFoundException {
+             @RequestParam(name = "size" , defaultValue = "5") int size) throws BankAccountNotFoundException {
         return bankAccountService.getAccountHistory(accoundId, page, size);
 
     }
