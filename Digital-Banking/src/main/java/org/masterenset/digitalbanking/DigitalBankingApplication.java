@@ -1,6 +1,9 @@
 package org.masterenset.digitalbanking;
 
+import org.masterenset.digitalbanking.dtos.BankAccountDto;
+import org.masterenset.digitalbanking.dtos.CurrentBankAccountDto;
 import org.masterenset.digitalbanking.dtos.CustomerDto;
+import org.masterenset.digitalbanking.dtos.SanvingBankAccountDto;
 import org.masterenset.digitalbanking.entities.*;
 import org.masterenset.digitalbanking.enums.AccountStatus;
 import org.masterenset.digitalbanking.enums.OperationType;
@@ -44,21 +47,27 @@ public class DigitalBankingApplication {
 				try {
 					bankAccountService.saveCurrentBankAccount(Math.random()*90000, 9000, customer.getId());
 					bankAccountService.saveSavingBankAccount(Math.random()*120000, 5.5, customer.getId());
-					List<BankAccount> bankAccounts = bankAccountService.bankAccountList();
-					for (BankAccount bankAccount : bankAccounts) {
-						for (int i = 0; i < 10; i++) {
-							bankAccountService.credit(bankAccount.getId(), 10000+Math.random()*12000, "Credit");
-							bankAccountService.debit(bankAccount.getId(), 1000+Math.random()*9000, "Debit");
-						}
-					}
+
 				}catch (CustomerNotFountException e){
 					e.printStackTrace();
-				}catch (BankAccountNotFoundException | BalanceNotSufficentException e){
-					throw new RuntimeException(e);
 				}
 
-
 			});
+
+			List<BankAccountDto> bankAccounts = bankAccountService.bankAccountList();
+			for (BankAccountDto bankAccount : bankAccounts) {
+				for (int i = 0; i < 10; i++) {
+					String accountId;
+					if (bankAccount instanceof SanvingBankAccountDto) {
+						accountId =((SanvingBankAccountDto) bankAccount).getId();
+					}else {
+						accountId =((CurrentBankAccountDto) bankAccount).getId();
+					}
+					bankAccountService.credit(accountId, 10000+Math.random()*12000, "Credit");
+					bankAccountService.debit(accountId, 1000+Math.random()*9000, "Debit");
+				}
+			}
+
 		};
 
 	}

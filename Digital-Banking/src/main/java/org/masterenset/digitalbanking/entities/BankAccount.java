@@ -14,7 +14,7 @@ import java.util.List;
 @DiscriminatorColumn(name = "TYPE", length = 4)
 @Data @NoArgsConstructor
 @AllArgsConstructor
-public class BankAccount {
+public abstract class BankAccount {
 
     @Id
     private String id;
